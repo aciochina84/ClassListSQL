@@ -3,6 +3,12 @@ package org.example;
 import java.sql.*;
 import java.util.Scanner;
 import java.util.ArrayList;
+import com.google.gson.Gson;
+
+import com.google.gson.GsonBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -10,6 +16,8 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
+        Logger logger = LogManager.getLogger();
+        logger.info("Hello");
 
         try {
             System.out.println("provo a connettermi al server");
@@ -40,21 +48,35 @@ public class Main {
                 // scorriamo il ResultSet un record alla volta
 
                 while (myResultSet.next()) {
-                    ResultSetMetaData metaData = myResultSet.getMetaData();
-                    int columnCount = metaData.getColumnCount();
                     Articolo myArticolo = new Articolo();
-//                    for (int i = 1; i <= columnCount; i++) {
-                        myArticolo.setArticoloID(myResultSet.getInt("ArticoloID"));
-                        myArticolo.setNome(myResultSet.getString("Nome"));
-                        myArticolo.setDescrizione(myResultSet.getString("Descrizione"));
-                        myArticolo.setPrezzoUnitarioVendita(myResultSet.getFloat("PrezzoUnitarioVendita"));
-                        myArticolo.setGiacenza(myResultSet.getInt("Quantita"));
-                        myArticolo.setAliquotaIVA(myResultSet.getInt("AliquotaIVA"));
-//                    }
+                    myArticolo.setArticoloID(myResultSet.getInt("ArticoloID"));
+                    myArticolo.setNome(myResultSet.getString("Nome"));
+                    myArticolo.setDescrizione(myResultSet.getString("Descrizione"));
+                    myArticolo.setPrezzoUnitarioVendita(myResultSet.getFloat("PrezzoUnitarioVendita"));
+                    myArticolo.setGiacenza(myResultSet.getInt("Giacenza"));
+                    myArticolo.setAliquotaIVA(myResultSet.getInt("AliquotaIVA"));
                     myArrayList.add(myArticolo);
-                    System.out.println();
                 }
                 myResultSet.close();
+
+//                for (Articolo articolo: myArrayList) {
+//                    System.out.print(articolo.getArticoloID() + " ");
+//                    System.out.print(articolo.getNome() + " ");
+//                    System.out.print(articolo.getDescrizione() + " ");
+//                    System.out.print(articolo.getPrezzoUnitarioVendita() + " ");
+//                    System.out.print(articolo.getGiacenza() + " ");
+//                    System.out.print(articolo.getAliquotaIVA());
+//                    System.out.println();
+//                }
+
+                // All'utente viene chiesto un range di prezzo: prezzomin e un prezzomax
+                // Viene stampato in output un json con la lista degli articoli con prezzo compreso fra
+                // prezzomin e prezzomax(sql between appure and)
+                // Se non ci sono articoli nel range -> lo comunica
+
+                Gson myGson = new Gson();
+                String str = myGson.toJson(myArrayList);
+                System.out.println(str);
 
 
                 conn.close();
@@ -66,6 +88,9 @@ public class Main {
         }
         catch (SQLException e){
             System.out.println("eccezione " + e.getMessage());
+        }
+        finally {
+
         }
     }
 }
