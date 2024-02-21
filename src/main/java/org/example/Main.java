@@ -43,13 +43,19 @@ public class Main {
                     ResultSetMetaData metaData = myResultSet.getMetaData();
                     int columnCount = metaData.getColumnCount();
                     Articolo myArticolo = new Articolo();
-                    for (int i = 1; i <= columnCount; i++) {
-                        myArticolo.setArticoloID(myResultSet.getInt(i));
-                        myArticolo.setNome(myResultSet.getString(i));
-                        myArticolo.setDescrizione(myResultSet.getString(i));
-                    }
+//                    for (int i = 1; i <= columnCount; i++) {
+                        myArticolo.setArticoloID(myResultSet.getInt("ArticoloID"));
+                        myArticolo.setNome(myResultSet.getString("Nome"));
+                        myArticolo.setDescrizione(myResultSet.getString("Descrizione"));
+                        myArticolo.setPrezzoUnitarioVendita(myResultSet.getFloat("PrezzoUnitarioVendita"));
+                        myArticolo.setGiacenza(myResultSet.getInt("Quantita"));
+                        myArticolo.setAliquotaIVA(myResultSet.getInt("AliquotaIVA"));
+//                    }
+                    myArrayList.add(myArticolo);
                     System.out.println();
                 }
+                myResultSet.close();
+
 
                 conn.close();
             }
